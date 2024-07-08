@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model CatatanKebaktian {
+  idKebaktian             Int      @id @default(autoincrement())
+  picIbadah               Int
+  pelayanFirman           Int
+  perikopBacaan           String   @db.VarChar(100)
+  jenisKebaktian          String   @db.VarChar(100)
+  tanggalKebaktian        DateTime @db.Date
+  waktuKebaktian          DateTime @db.Time
+  temaRenungan            String   @db.VarChar(100)
+  baptisKudusAnak         Int?     @default(0)
+  baptisKudusDewasa       Int?     @default(0)
+  mengakuPercayaSidi      Int?     @default(0)
+  pemberkatanNikahSaudara Int?     @default(0)
+  pemberkatanNikahSaudari Int?     @default(0)
+  organis                 String?  @db.Text
+  prokantor               String?  @db.Text
+  operatorLcd             String?  @db.VarChar(100)
+  programDirector         String?  @db.VarChar(100)
+  tanggalPembuatan        DateTime @default(now()) @db.Date
+  majelisPembuat          Int
+  evaluasiBaikKebaktian   String?  @db.Text
+  evaluasiBurukKebaktian  String?  @db.Text
+
+  // Relations
+  Majelis            Majelis              @relation(fields: [majelisPembuat], references: [id])
+  PelayanFirman      PelayanFirman        @relation(fields: [pelayanFirman], references: [id])
+  KehadiranJemaat    KehadiranJemaat[]
+  MajelisTugas       MajelisTugas[]
+  PelayanFirmanTugas PelayanFirmanTugas[]
+  Persembahan        Persembahan[]
+
+  @@unique([jenisKebaktian, tanggalKebaktian, waktuKebaktian])
+  @@unique([pemberkatanNikahSaudara, pemberkatanNikahSaudari])
+  @@index([picIbadah])
+  @@index([majelisPembuat])
+}
+
+model KehadiranJemaat {
+  idKebaktian           Int  @id
+  umumPria              Int?
+  umumWanita            Int?
+  pemudaPria            Int?
+  pemudaWanita          Int?
+  remajaPria            Int?
+  remajaWanita          Int?
+  anakPria              Int?
+  anakWanita            Int?
+  pesertaPerjamuanKudus Int?
+
+  // Relations
+  CatatanKebaktian CatatanKebaktian @relation(fields: [idKebaktian], references: [idKebaktian])
+}
+
+model Majelis {
+  id      Int    @id @default(autoincrement())
+  nama    String @db.VarChar(100)
+  wilayah String @db.VarChar(100)
+  gelar   String @db.VarChar(50)
+
+  // Relations
+  CatatanKebaktian CatatanKebaktian[]
+  MajelisTugas     MajelisTugas[]
+
+  @@unique([nama, wilayah, gelar])
+}
+
+model MajelisTugas {
+  idKebaktian Int
+  majelisId   Int
+  tugas       String? @db.VarChar(100)
+
+  // Relations
+  CatatanKebaktian CatatanKebaktian @relation(fields: [idKebaktian], references: [idKebaktian])
+  Majelis          Majelis          @relation(fields: [majelisId], references: [id])
+
+  @@id([idKebaktian, majelisId])
+  @@index([majelisId])
+}
+
+model PelayanFirman {
+  id   Int    @id @default(autoincrement())
+  nama String @db.VarChar(100)
+  asal String @db.VarChar(100)
+
+  // Relations
+  CatatanKebaktian   CatatanKebaktian[]
+  PelayanFirmanTugas PelayanFirmanTugas[]
+
+  @@unique([nama, asal])
+}
+
+model PelayanFirmanTugas {
+  pelayanFirmanId Int
+  idKebaktian     Int
+
+  // Relations
+  PelayanFirman    PelayanFirman    @relation(fields: [pelayanFirmanId], references: [id])
+  CatatanKebaktian CatatanKebaktian @relation(fields: [idKebaktian], references: [idKebaktian])
+
+  @@id([pelayanFirmanId, idKebaktian])
+  @@index([idKebaktian])
+}
+
+model Persembahan {
+  idKebaktian                 Int  @id
+  melaluiKantong              Int?
+  amplopMelaluiKantong        Int?
+  bulanan                     Int?
+  syukur                      Int?
+  danaAbadi                   Int?
+  kasihPeduli                 Int?
+  syukurBaptisSidiNikah       Int?
+  syukurPerjamuanKudus        Int?
+  amplopSyukurBaptisSidiNikah Int?
+  amplopSyukurPerjamuanKudus  Int?
+  perorangan                  Int?
+  pembangunan                 Int?
+  khusus                      Int?
+  lainLain                    Int?
+  totalPersembahan            Int  @default(0)
+
+  // Relations
+  CatatanKebaktian CatatanKebaktian @relation(fields: [idKebaktian], references: [idKebaktian])
+}
