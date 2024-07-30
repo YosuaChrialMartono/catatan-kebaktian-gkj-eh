@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
-import SideNav from "@/components/side-nav/side-nav";
+import SideNav from "@/components/navigation/side-nav/side-nav";
+import TopNav from "@/components/navigation/top-nav/top-nav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,9 +27,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex gap-3 h-full">
+          <main className="flex flex-col md:flex-row gap-3 size-full overflow-auto bg-muted/40">
             <SideNav />
-            {children}
+            <TopNav />
+            <div className="size-full md:h-full md:w-max md:flex md:flex-grow">
+              {children}
+            </div>
           </main>
         </ThemeProvider>
       </body>
