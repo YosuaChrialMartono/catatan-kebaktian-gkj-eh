@@ -14,8 +14,16 @@ export default function SideNav() {
   });
   return (
     <div className="hidden md:block h-full p-4">
-      <div className="w-[280px] h-full border rounded-xl bg-background">
-        <nav className="flex flex-col gap-4 p-4">{content}</nav>
+      <div className="flex flex-col justify-between w-[280px] h-full border rounded-xl bg-background p-3">
+        <div className="w-full">
+          <span className="flex justify-center text-lg font-extrabold text-foreground text-center w-full">
+            Catatan Kebaktian GKJ EH
+          </span>
+          <nav className="flex flex-col gap-4 p-4">{content}</nav>
+        </div>
+        <span className="mt-auto text-xs text-foreground text-center">
+          © 2024 GKJ EH
+        </span>
       </div>
     </div>
   );

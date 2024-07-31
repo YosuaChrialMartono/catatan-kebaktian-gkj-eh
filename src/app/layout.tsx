@@ -27,7 +27,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex flex-col md:flex-row gap-3 size-full overflow-auto bg-muted/40">
+          <main className="flex flex-col md:flex-row size-full overflow-auto bg-muted/40">
             <SideNav />
             <TopNav />
             <div className="size-full md:h-full md:w-max md:flex md:flex-grow">

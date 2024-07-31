@@ -3,6 +3,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -13,7 +14,7 @@ import { NavItems } from "../NavItems";
 import TopNavItem from "./top-nav-item";
 const TopNav = () => {
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 md:static md:h-auto md:border-0 md:bg-transparent md:px-6">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 md:static md:h-auto md:border-0 md:bg-transparent md:px-6 md:hidden">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="md:hidden">
@@ -26,6 +27,7 @@ const TopNav = () => {
             <SheetTitle>
               <h1 className="text-xl font-bold">Catatan Kebaktian GKJ EH</h1>
             </SheetTitle>
+            <SheetDescription>© 2024 GKJ EH</SheetDescription>
           </SheetHeader>
           <nav className="flex flex-col gap-4 pt-4">
             {NavItems.map((item, index) => (
