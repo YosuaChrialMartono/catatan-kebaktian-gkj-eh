@@ -27,10 +27,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex flex-col md:flex-row size-full overflow-auto bg-muted/40">
+          <main className="flex flex-col md:flex-row pb-4 md:p-4 md:gap-4 size-full overflow-auto bg-muted/40">
             <SideNav />
             <TopNav />
-            <div className="size-full md:h-full md:w-max md:flex md:flex-grow">
+            <div className="size-full h-full p-4 md:p-0 md:w-max md:flex md:flex-grow overflow-auto">
               {children}
             </div>
           </main>

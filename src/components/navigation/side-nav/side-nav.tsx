@@ -13,7 +13,7 @@ export default function SideNav() {
     );
   });
   return (
-    <div className="hidden md:block h-full p-4">
+    <div className="hidden md:block h-full">
       <div className="flex flex-col justify-between w-[280px] h-full border rounded-xl bg-background p-3">
         <div className="w-full">
           <span className="flex justify-center text-lg font-extrabold text-foreground text-center w-full">
