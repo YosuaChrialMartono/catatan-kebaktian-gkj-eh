@@ -98,7 +98,7 @@ const catatanKebaktianFormSchema = z.object({
     pesertaPerjamuanKudus: z.number().nullable().refine(data => data ? data >= 0 : true, {
         message: "Jumlah peserta perjamuan kudus tidak boleh negatif"
     }),
-    majelis: majelisFormSchema,
+    majelis: majelisFormSchema.array().min(1),
     picIbadah: z.string().min(1),
     organis: z.string().min(1),
     prokantor: z.string().min(1),

@@ -46,7 +46,7 @@ import {
   jumlahPasalAyatAlkitab,
   kitabAlkitab,
 } from "../../../../public/alkitab";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
 export function CatatanKebaktianForm() {
@@ -67,50 +67,50 @@ export function CatatanKebaktianForm() {
       },
       temaRenungan: "",
       pelayananKhusus: {
-        baptisKudusAnak: null,
-        baptisKudusDewasa: null,
-        mengakuPercaya: null,
+        baptisKudusAnak: 0,
+        baptisKudusDewasa: 0,
+        mengakuPercaya: 0,
         pemberkatanNikah: {
-          namaSaudara: null,
-          namaSaudari: null,
+          namaSaudara: "",
+          namaSaudari: "",
         },
       },
       persembahan: {
         melaluiKantong: {
-          totalRupiah: null,
-          totalAmplop: null,
+          totalRupiah: 0,
+          totalAmplop: 0,
         },
         bulanan: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
         syukur: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
         danaAbadi: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
         kasihPeduli: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
         syukurBaptisSidiNikah: {
-          totalRupiah: null,
-          totalAmplop: null,
+          totalRupiah: 0,
+          totalAmplop: 0,
         },
         syukurPerjamuanKudus: {
-          totalRupiah: null,
-          totalAmplop: null,
+          totalRupiah: 0,
+          totalAmplop: 0,
         },
         perorangan: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
         pembangunan: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
         khusus: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
         lainnya: {
-          totalRupiah: null,
+          totalRupiah: 0,
         },
       },
       kehadiranJemaat: {
@@ -132,10 +132,7 @@ export function CatatanKebaktianForm() {
         },
       },
       pesertaPerjamuanKudus: 0,
-      majelis: {
-        nama: "",
-        tugas: "",
-      },
+      majelis: [],
       picIbadah: "",
       organis: "",
       prokantor: "",
@@ -150,6 +147,42 @@ export function CatatanKebaktianForm() {
   function onSubmit(values: formSchema) {
     console.log(values);
   }
+
+  const [formMajelisCount, setFormMajelisCount] = useState(1);
+
+  const handleAddMajelisForm = () => {
+    setFormMajelisCount(formMajelisCount + 1);
+  };
+
+  interface MajelisFormInterface {
+    nama: string;
+    tugas: string;
+  }
+
+  const targetRef = useRef<HTMLDivElement>(null);
+
+  const scrollToDiv = () => {
+    if (targetRef.current) {
+      targetRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleDeleteMajelisForm = (indexToDelete: number) => {
+    console.log(indexToDelete);
+    if (formMajelisCount > 1) {
+      setFormMajelisCount(formMajelisCount - 1);
+      const majelisFormArray = form.getValues()
+        .majelis as MajelisFormInterface[];
+      if (majelisFormArray) {
+        const updatedMajelisForm = majelisFormArray.filter(
+          (_, index) => index !== indexToDelete
+        );
+        form.setValue("majelis", updatedMajelisForm);
+        console.log(updatedMajelisForm);
+      }
+    }
+    scrollToDiv();
+  };
 
   return (
     <Form {...form}>
@@ -515,7 +548,9 @@ export function CatatanKebaktianForm() {
             </div>
           </div>
         </div>
+
         <Separator />
+
         <div id="persembahan" className="flex flex-col gap-4">
           <span className="font-extrabold text-xl">Persembahan</span>
           <div className="flex gap-4">
@@ -775,7 +810,9 @@ export function CatatanKebaktianForm() {
             </span>
           </div>
         </div>
+
         <Separator />
+
         <div id="kehadiran-jemaat" className="flex flex-col w-fit gap-4">
           <span className="font-extrabold text-xl">Kehadiran Jemaat</span>
           {[
@@ -883,7 +920,73 @@ export function CatatanKebaktianForm() {
             )}
           />
         </div>
+
         <Separator />
+
+        <div ref={targetRef} id="majelis" className="flex flex-col gap-4">
+          <span className="font-extrabold text-xl">
+            Anggota Majelis yang Hadir
+          </span>
+          {Array.from({ length: formMajelisCount }).map((_, index) => (
+            <div className="flex gap-4" key={index}>
+              <FormField
+                control={form.control}
+                name={`majelis.${index}.nama`}
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormLabel>Nama</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormDescription>Contoh: John Doe</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`majelis.${index}.tugas`}
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormLabel>Tugas</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Contoh: Pengakuan Iman Rasuli
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {formMajelisCount > 1 && (
+                <div className="flex flex-col gap-2">
+                  <span>Action</span>
+                  <div className="flex gap-4">
+                    <div className="flex flex-col items-center">
+                      <Button
+                        variant="outline"
+                        onClick={() => handleDeleteMajelisForm(index)}
+                      >
+                        Hapus
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+
+          <div className="flex flex-col items-center">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => handleAddMajelisForm()}
+            >
+              Tambah
+            </Button>
+          </div>
+        </div>
 
         <div id="form-action-button" className="flex gap-3">
           <Button type="submit">Submit</Button>
